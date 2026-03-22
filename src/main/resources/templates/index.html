@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>Secure Task Manager</h1>
+        <p>Manage your tasks securely with role-based access control.</p>
+
+        <div sec:authorize="isAuthenticated()">
+            <p>Welcome back, <strong sec:authentication="name"></strong>!</p>
+            <a th:href="@{/dashboard}" class="btn btn-primary">Go to Dashboard</a>
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-secondary">Logout</button>
+            </form>
+        </div>
+
+        <div sec:authorize="isAnonymous()">
+            <a th:href="@{/login}" class="btn btn-primary">Login</a>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="feature-card">
+            <h3>Users</h3>
+            <p>Create and manage your own tasks. Mark them as completed when done.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Admins</h3>
+            <p>View all tasks across all users and delete any task.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Secure</h3>
+            <p>Role-based access control ensures data isolation between users.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

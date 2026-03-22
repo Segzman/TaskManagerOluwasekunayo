@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <nav class="navbar">
+        <a th:href="@{/}" class="nav-brand">Task Manager</a>
+        <div class="nav-right">
+            <span class="badge badge-admin">ADMIN</span>
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-secondary">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <h2>All Tasks</h2>
+        <span class="task-count" th:text="${tasks.size()} + ' total tasks'"></span>
+    </div>
+
+    <div th:if="${tasks.isEmpty()}" class="empty-state">
+        <p>No tasks have been created yet.</p>
+    </div>
+
+    <table th:unless="${tasks.isEmpty()}" class="task-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Owner</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="task : ${tasks}" th:classappend="${task.completed} ? 'row-completed' : ''">
+                <td th:text="${task.id}"></td>
+                <td th:text="${task.title}"></td>
+                <td th:text="${task.description}"></td>
+                <td><span class="owner-badge" th:text="${task.ownerUsername}"></span></td>
+                <td>
+                    <span class="badge" th:classappend="${task.completed} ? 'badge-success' : 'badge-pending'"
+                          th:text="${task.completed} ? 'Completed' : 'Pending'"></span>
+                </td>
+                <td>
+                    <form th:action="@{/admin/delete}" method="post">
+                        <input type="hidden" name="id" th:value="${task.id}">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Delete this task?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

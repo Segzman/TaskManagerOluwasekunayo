@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Tasks</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <nav class="navbar">
+        <a th:href="@{/}" class="nav-brand">Task Manager</a>
+        <div class="nav-right">
+            <span>Logged in as <strong th:text="${username}"></strong></span>
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-secondary">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <h2>My Tasks</h2>
+        <a th:href="@{/user/create}" class="btn btn-primary">+ New Task</a>
+    </div>
+
+    <div th:if="${tasks.isEmpty()}" class="empty-state">
+        <p>You have no tasks yet. Click <strong>+ New Task</strong> to get started.</p>
+    </div>
+
+    <div class="task-grid" th:unless="${tasks.isEmpty()}">
+        <div th:each="task : ${tasks}" class="task-card" th:classappend="${task.completed} ? 'completed' : ''">
+            <div class="task-header">
+                <h3 th:text="${task.title}"></h3>
+                <span class="badge" th:classappend="${task.completed} ? 'badge-success' : 'badge-pending'"
+                      th:text="${task.completed} ? 'Completed' : 'Pending'"></span>
+            </div>
+            <p th:text="${task.description}" class="task-desc"></p>
+            <div class="task-footer" th:unless="${task.completed}">
+                <form th:action="@{/user/complete}" method="post">
+                    <input type="hidden" name="id" th:value="${task.id}">
+                    <button type="submit" class="btn btn-success btn-sm">Mark Complete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
